@@ -39,7 +39,8 @@ export default function Home() {
       });
 
       if (!res.ok) {
-        throw new Error("서버 오류가 발생했습니다.");
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.error || "서버 오류가 발생했습니다.");
       }
 
       // 2. 스트리밍 응답 처리
@@ -56,7 +57,7 @@ export default function Home() {
       }
     } catch (error) {
       console.error(error);
-      alert("분석 중 오류가 발생했습니다. 다시 시도해주세요.");
+      alert(error instanceof Error ? error.message : "분석 중 오류가 발생했습니다. 다시 시도해주세요.");
     } finally {
       setLoading(false);
       setIsFinished(true);
